@@ -285,6 +285,23 @@
 </head>
 <body>
 
+<!-- Password gate -->
+<div class="who-overlay" id="pw-overlay">
+  <div class="who-box">
+    <div class="who-title">🔒 Private</div>
+    <div class="who-sub">Enter the group password</div>
+    <input id="pw-input" type="password" class="add-pack-input"
+      placeholder="Password"
+      style="width:100%;margin-bottom:10px;text-align:center;font-size:16px;letter-spacing:2px"
+      onkeydown="if(event.key==='Enter')checkPw()">
+    <button onclick="checkPw()"
+      style="width:100%;background:var(--gold);color:#000;border:none;border-radius:12px;padding:13px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer">
+      Enter
+    </button>
+    <div id="pw-err" style="color:#ef4444;font-size:12px;margin-top:10px;min-height:16px"></div>
+  </div>
+</div>
+
 <!-- Who-are-you modal -->
 <div class="who-overlay hidden" id="who-overlay">
   <div class="who-box">
@@ -873,14 +890,42 @@ function chooseMe(id) {
   toast(`👋 Hey ${p.name}!`);
 }
 
-load();
-render();
+// ═══════════════════════════════════════════════════════════════
+// PASSWORD GATE
+// ═══════════════════════════════════════════════════════════════
 
-// Show who-modal if identity not yet set
-if (!state.myId) {
-  renderWhoModal();
-  document.getElementById('who-overlay').classList.remove('hidden');
+function checkPw() {
+  const val = document.getElementById('pw-input').value;
+  if (val === 'vibecoding2026') {
+    sessionStorage.setItem('cw2_unlocked', '1');
+    document.getElementById('pw-overlay').classList.add('hidden');
+    document.getElementById('pw-input').value = '';
+    bootApp();
+  } else {
+    document.getElementById('pw-err').textContent = 'Wrong password, try again';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
 }
+
+function bootApp() {
+  load();
+  render();
+  if (!state.myId) {
+    renderWhoModal();
+    document.getElementById('who-overlay').classList.remove('hidden');
+  }
+}
+
+// On load: check if already unlocked this session
+if (sessionStorage.getItem('cw2_unlocked') === '1') {
+  document.getElementById('pw-overlay').classList.add('hidden');
+  bootApp();
+} else {
+  setTimeout(() => document.getElementById('pw-input').focus(), 100);
+}
+
+
 </script>
 </body>
 </html>
