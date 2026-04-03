@@ -601,10 +601,7 @@ function chipLabel(pid) {
   const p = person(pid);
   if (!p) return '';
   if (pid === state.myId) return 'You';
-  // Friend index (1-based, skipping myId)
-  const others = PEOPLE.filter(x => x.id !== state.myId);
-  const idx = others.findIndex(x => x.id === pid);
-  return idx >= 0 ? `Friend ${idx + 2}` : p.name;
+  return p.name;
 }
 
 // ═══════════════════════════════════════════════════════════════
