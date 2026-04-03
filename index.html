@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌴 Coachella W2 2026</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Coachella W2">
+  <meta name="theme-color" content="#080808">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --card: #181818;
+      --border: #262626;
+      --text: #f0f0f0;
+      --sub: #777;
+      --gold: #f5c842;
+      --p1: #f472b6;
+      --p2: #60a5fa;
+      --p3: #34d399;
+      --p4: #fb923c;
+    }
+
+    html { height: 100%; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ── Header ────────────────────────────────── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,8,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px 10px;
+    }
+    .header-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+    .header-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
+    .person-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 12px;
+      font-size: 13px; font-weight: 600; cursor: pointer; flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .person-badge:active { background: var(--border); }
+
+    /* ── Bottom nav ────────────────────────────── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      display: flex;
+      background: rgba(8,8,8,0.97);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .nav-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 8px 4px 6px; background: none; border: none;
+      color: var(--sub); font-size: 20px; font-family: inherit; cursor: pointer;
+      transition: color 0.15s;
+    }
+    .nav-btn span { font-size: 9px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; }
+    .nav-btn.active { color: var(--gold); }
+
+    /* ── Day tabs ──────────────────────────────── */
+    .day-tabs {
+      display: flex; padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .day-tab {
+      flex: 1; padding: 10px 0; text-align: center;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--sub); font-family: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; line-height: 1.2;
+    }
+    .day-tab .date { font-size: 10px; font-weight: 400; opacity: 0.6; }
+    .day-tab.active { color: var(--text); border-bottom-color: var(--gold); }
+
+    /* ── Stage chips ───────────────────────────── */
+    .stage-chips {
+      display: flex; gap: 7px; padding: 10px 16px 8px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .stage-chips::-webkit-scrollbar { display: none; }
+    .stage-chip {
+      flex-shrink: 0; padding: 4px 11px; border-radius: 14px;
+      border: 1px solid var(--border); background: none;
+      color: var(--sub); font-family: inherit; font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .stage-chip.active { color: #000; }
+
+    /* ── Artist grid ───────────────────────────── */
+    .artist-grid { padding: 6px 12px 16px; display: flex; flex-direction: column; gap: 7px; }
+    @media (min-width: 480px) {
+      .artist-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    }
+
+    .artist-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 11px 13px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+    .artist-card.headliner {
+      background: linear-gradient(135deg, #1a1600 0%, #181818 70%);
+      border-color: #3a3100;
+    }
+    .artist-card.my-pick { border-width: 1.5px; }
+    .artist-card:active { opacity: 0.75; }
+
+    .artist-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+    .artist-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .headliner .artist-name { color: var(--gold); }
+    .artist-meta { display: flex; gap: 7px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+    .stage-badge {
+      font-size: 10px; font-weight: 700; padding: 2px 7px;
+      border-radius: 8px; letter-spacing: 0.2px;
+    }
+    .time-text { font-size: 11px; color: var(--sub); font-variant-numeric: tabular-nums; }
+    .est-badge { font-size: 9px; color: var(--sub); opacity: 0.7; }
+
+    .person-dots { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
+    .pdot {
+      width: 17px; height: 17px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: 800; color: #000; flex-shrink: 0;
+    }
+
+    /* ── Picks tab ─────────────────────────────── */
+    .person-bar {
+      display: flex; gap: 7px; padding: 11px 16px;
+      overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border);
+    }
+    .person-bar::-webkit-scrollbar { display: none; }
+    .person-btn {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: none; color: var(--sub); font-family: inherit;
+      font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    }
+    .person-btn.active { color: #000; }
+    .dot8 { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .picks-body { padding: 12px 16px; }
+    .day-label {
+      font-size: 11px; font-weight: 700; color: var(--sub);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 10px 0 6px; border-bottom: 1px solid var(--border); margin-bottom: 6px;
+    }
+    .pick-row {
+      display: flex; gap: 10px; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .pick-row:last-child { border-bottom: none; }
+    .pick-time { font-size: 11px; color: var(--sub); width: 54px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .pick-info { flex: 1; min-width: 0; }
+    .pick-name { font-size: 14px; font-weight: 600; }
+    .pick-stage { font-size: 11px; margin-top: 1px; }
+    .conflict-dot { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; flex-shrink: 0; }
+
+    /* ── Share bar ─────────────────────────────── */
+    .share-bar { display: flex; gap: 8px; padding: 10px 16px 0; }
+    .share-btn {
+      flex: 1; padding: 10px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--text); font-family: inherit; font-size: 12px;
+      font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+    }
+    .share-btn.gold { background: var(--gold); color: #000; border-color: var(--gold); }
+    .share-btn:active { opacity: 0.7; }
+
+    /* ── Sections ──────────────────────────────── */
+    .section { padding: 16px; }
+    .section + .section { border-top: 1px solid var(--border); }
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.7px;
+      text-transform: uppercase; color: var(--sub); margin-bottom: 12px;
+    }
+
+    /* ── Cards ─────────────────────────────────── */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 13px 14px; margin-bottom: 8px;
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+    .card-sub { font-size: 12px; color: var(--sub); line-height: 1.6; }
+
+    /* ── Flight card ───────────────────────────── */
+    .flight-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 13px 14px; margin-bottom: 8px;
+    }
+    .flight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .flight-person { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+    .flight-tag {
+      margin-left: auto; font-size: 10px; font-weight: 600;
+      background: var(--surface); padding: 3px 8px; border-radius: 6px; color: var(--sub);
+    }
+    .flight-route { display: flex; align-items: center; gap: 8px; }
+    .airport { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+    .flight-middle {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    }
+    .flight-line {
+      width: 100%; height: 1px; background: var(--border); position: relative;
+    }
+    .flight-line::after {
+      content: '›'; position: absolute; right: -4px; top: -9px;
+      color: var(--border); font-size: 14px;
+    }
+    .flight-num { font-size: 10px; color: var(--sub); font-weight: 600; }
+    .flight-date { font-size: 10px; color: var(--sub); }
+    .airport-time { font-size: 11px; color: var(--sub); margin-top: 3px; }
+
+    /* ── Notes ─────────────────────────────────── */
+    .note-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .note-item:last-child { border-bottom: none; }
+    .note-check {
+      width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border);
+      flex-shrink: 0; margin-top: 1px; cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;
+    }
+    .note-check.done { background: var(--gold); border-color: var(--gold); color: #000; }
+    .note-text { font-size: 13px; line-height: 1.4; }
+    .note-text.done { opacity: 0.4; text-decoration: line-through; }
+    .note-cat { font-size: 10px; color: var(--sub); margin-top: 1px; }
+
+    /* ── Inputs ────────────────────────────────── */
+    .add-row { display: flex; gap: 8px; margin-top: 10px; }
+    .add-input {
+      flex: 1; background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 12px; color: var(--text);
+      font-family: inherit; font-size: 13px; outline: none; transition: border-color 0.15s;
+    }
+    .add-input:focus { border-color: var(--gold); }
+    .add-select {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 10px; color: var(--sub);
+      font-family: inherit; font-size: 12px; outline: none; cursor: pointer;
+    }
+    .add-btn {
+      background: var(--gold); color: #000; border: none;
+      border-radius: 10px; padding: 9px 16px;
+      font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+    }
+    .add-btn:active { opacity: 0.8; }
+
+    /* ── Meeting points ────────────────────────── */
+    .meet-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 7px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .meet-left { flex-shrink: 0; text-align: center; }
+    .meet-day { font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--sub); }
+    .meet-time { font-size: 13px; font-weight: 700; color: var(--gold); margin-top: 1px; }
+    .meet-place { font-size: 14px; font-weight: 600; }
+    .meet-note { font-size: 12px; color: var(--sub); margin-top: 2px; }
+
+    /* ── Person modal ──────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+      z-index: 300; display: flex; align-items: flex-end; justify-content: center;
+    }
+    .modal {
+      background: var(--surface); border-radius: 20px 20px 0 0;
+      padding: 24px 20px; width: 100%; max-width: 480px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
+    .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .modal-sub { font-size: 13px; color: var(--sub); margin-bottom: 20px; }
+    .person-opt {
+      display: flex; align-items: center; gap: 13px;
+      padding: 12px 14px; background: var(--card); border: 1.5px solid var(--border);
+      border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
+    }
+    .person-opt:active { opacity: 0.75; }
+    .person-opt.active { border-color: var(--p-color, var(--gold)); }
+    .person-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800; color: #000; flex-shrink: 0;
+    }
+    .person-opt-name { flex: 1; }
+    .pname-input {
+      background: none; border: none; color: var(--text);
+      font-family: inherit; font-size: 15px; font-weight: 600; outline: none; width: 100%;
+    }
+    .you-label { font-size: 10px; color: var(--sub); margin-top: 1px; }
+    .check-icon { color: var(--gold); font-size: 18px; }
+
+    /* ── Toast ─────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%);
+      background: rgba(255,255,255,0.95); color: #000;
+      padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      z-index: 400; opacity: 0; transition: opacity 0.25s; pointer-events: none;
+      white-space: nowrap; max-width: 90vw;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ── Empty ─────────────────────────────────── */
+    .empty { text-align: center; padding: 48px 24px; color: var(--sub); font-size: 14px; }
+    .empty-icon { font-size: 36px; margin-bottom: 12px; }
+
+    /* ── Overlap section ───────────────────────── */
+    .overlap-row {
+      display: flex; gap: 10px; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .overlap-row:last-child { border-bottom: none; }
+
+    /* ── Info banner ───────────────────────────── */
+    .info-banner {
+      background: #1a1500; border: 1px solid #3a3000;
+      border-radius: 10px; padding: 10px 13px; margin-bottom: 10px;
+      font-size: 12px; color: #c8a84a; line-height: 1.5;
+    }
+
+  /* ── Group messages ────────────────────────── */
+    .msg-item {
+      padding: 9px 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .msg-item:last-child { border-bottom: none; }
+    .msg-avatar {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #000; margin-top: 1px;
+    }
+    .msg-body { flex: 1; min-width: 0; }
+    .msg-sender { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+    .msg-text { font-size: 13px; line-height: 1.4; word-break: break-word; }
+    .msg-time { font-size: 10px; color: var(--sub); margin-top: 2px; }
+
+  /* ── Delete / icon btn ─────────────────────── */
+    .icon-btn {
+      background: none; border: none; color: var(--sub); cursor: pointer;
+      font-size: 16px; padding: 4px; border-radius: 6px; flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .icon-btn:hover { color: #ef4444; }
+
+  /* ── Flight add form ───────────────────────── */
+    .flight-form {
+      background: var(--surface); border: 1px dashed var(--border);
+      border-radius: 12px; padding: 13px 14px; margin-bottom: 8px;
+    }
+    .flight-form-title { font-size: 12px; font-weight: 700; color: var(--sub); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .form-input {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 10px; color: var(--text);
+      font-family: inherit; font-size: 12px; outline: none; width: 100%;
+      transition: border-color 0.15s; text-transform: uppercase;
+    }
+    .form-input::placeholder { text-transform: none; }
+    .form-input:focus { border-color: var(--gold); }
+    .form-row { display: flex; gap: 7px; margin-top: 7px; }
+    .form-select {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 10px; color: var(--text);
+      font-family: inherit; font-size: 12px; outline: none; flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-row">
+    <div>
+      <h1>🌴 Coachella W2 '26</h1>
+      <div class="header-sub">Apr 17–19 · Empire Polo Club · Indio, CA</div>
+    </div>
+    <div class="person-badge" onclick="openModal()" id="hdrBadge">
+      <div class="dot8" id="hdrDot" style="background:#555"></div>
+      <span id="hdrName">Who are you?</span>
+    </div>
+  </div>
+</header>
+
+<!-- App -->
+<main id="app"></main>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav">
+  <button class="nav-btn" onclick="setTab('schedule')" id="tnav-schedule">📅<span>Schedule</span></button>
+  <button class="nav-btn" onclick="setTab('picks')"    id="tnav-picks">⭐<span>My Picks</span></button>
+  <button class="nav-btn" onclick="setTab('group')"    id="tnav-group">👥<span>Group</span></button>
+  <button class="nav-btn" onclick="setTab('travel')"   id="tnav-travel">✈️<span>Travel</span></button>
+  <button class="nav-btn" onclick="setTab('notes')"    id="tnav-notes">📝<span>Notes</span></button>
+</nav>
+
+<!-- Person modal -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="if(event.target===this&&state.myId)closeModal()">
+  <div class="modal">
+    <div class="modal-title">Hey, who are you? 👋</div>
+    <div class="modal-sub">Tap your name — you can rename yourself anytime</div>
+    <div id="personList"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+
+const PEOPLE = [
+  { id:'p1', name:'Anna',  color:'#f472b6' },
+  { id:'p2', name:'Yuan',  color:'#60a5fa' },
+  { id:'p3', name:'P3',    color:'#34d399' },
+  { id:'p4', name:'P4',    color:'#fb923c' },
+];
+
+const STAGE_CLR = {
+  'Coachella':       '#f5c842',
+  'Outdoor Theater': '#f97316',
+  'Sahara':          '#a855f7',
+  'Gobi':            '#22c55e',
+  'Mojave':          '#3b82f6',
+  'Yuma':            '#ec4899',
+  'Quasar':          '#06b6d4',
+};
+
+// Times are estimated — official W2 set times drop ~Apr 13 via Coachella app
+const LINEUP = [
+  // ── FRIDAY APR 17 ─────────────────────────────────────────
+  // Coachella Stage
+  { id:'fc1', name:'Blood Orange',          stage:'Coachella',       day:'fri', time:'1:30 PM', est:true },
+  { id:'fc2', name:'Foster the People',     stage:'Coachella',       day:'fri', time:'3:00 PM', est:true },
+  { id:'fc3', name:'Teddy Swims',           stage:'Coachella',       day:'fri', time:'4:30 PM', est:true },
+  { id:'fc4', name:'the xx',                stage:'Coachella',       day:'fri', time:'8:30 PM', est:true },
+  { id:'fc5', name:'Sabrina Carpenter',     stage:'Coachella',       day:'fri', time:'11:00 PM', headliner:true },
+  { id:'fc6', name:'Anyma presents Æden',   stage:'Coachella',       day:'fri', time:'1:00 AM', est:true },
+  // Outdoor Theater
+  { id:'fo1', name:'Dabeull',               stage:'Outdoor Theater', day:'fri', time:'1:30 PM', est:true },
+  { id:'fo2', name:'BINI',                  stage:'Outdoor Theater', day:'fri', time:'3:00 PM', est:true },
+  { id:'fo3', name:'Ethel Cain',            stage:'Outdoor Theater', day:'fri', time:'4:30 PM', est:true },
+  { id:'fo4', name:'Turnstile',             stage:'Outdoor Theater', day:'fri', time:'6:30 PM', est:true },
+  { id:'fo5', name:'Disclosure',            stage:'Outdoor Theater', day:'fri', time:'8:30 PM', est:true },
+  // Sahara
+  { id:'fs1', name:'Youna',                 stage:'Sahara',          day:'fri', time:'1:00 PM', est:true },
+  { id:'fs2', name:'HUGEL',                 stage:'Sahara',          day:'fri', time:'2:30 PM', est:true },
+  { id:'fs3', name:'Marlon Hoffstadt',      stage:'Sahara',          day:'fri', time:'4:00 PM', est:true },
+  { id:'fs4', name:'Levity',                stage:'Sahara',          day:'fri', time:'5:30 PM', est:true },
+  { id:'fs5', name:'KATSEYE',               stage:'Sahara',          day:'fri', time:'7:00 PM', est:true },
+  { id:'fs6', name:'Central Cee',           stage:'Sahara',          day:'fri', time:'8:30 PM', est:true },
+  { id:'fs7', name:'Sexyy Red',             stage:'Sahara',          day:'fri', time:'10:00 PM', est:true },
+  // Gobi
+  { id:'fg1', name:'Bob Baker Marionettes', stage:'Gobi',            day:'fri', time:'1:00 PM', est:true },
+  { id:'fg2', name:'NewDad',                stage:'Gobi',            day:'fri', time:'2:30 PM', est:true },
+  { id:'fg3', name:'Joyce Manor',           stage:'Gobi',            day:'fri', time:'4:00 PM', est:true },
+  { id:'fg4', name:'Lykke Li',              stage:'Gobi',            day:'fri', time:'5:30 PM', est:true },
+  { id:'fg5', name:'fakemink',              stage:'Gobi',            day:'fri', time:'7:00 PM', est:true },
+  { id:'fg6', name:'Creepy Nuts',           stage:'Gobi',            day:'fri', time:'8:30 PM', est:true },
+  { id:'fg7', name:'Joost',                 stage:'Gobi',            day:'fri', time:'10:00 PM', est:true },
+  // Mojave
+  { id:'fm1', name:'CMAT',                  stage:'Mojave',          day:'fri', time:'1:30 PM', est:true },
+  { id:'fm2', name:'Slayyyter',             stage:'Mojave',          day:'fri', time:'3:00 PM', est:true },
+  { id:'fm3', name:'Devo',                  stage:'Mojave',          day:'fri', time:'4:30 PM', est:true },
+  { id:'fm4', name:'Holly Humberstone',     stage:'Mojave',          day:'fri', time:'6:00 PM', est:true },
+  { id:'fm5', name:'Moby',                  stage:'Mojave',          day:'fri', time:'7:30 PM', est:true },
+  { id:'fm6', name:'Dijon',                 stage:'Mojave',          day:'fri', time:'9:00 PM', est:true },
+  // Yuma
+  { id:'fy1', name:'Sahar Z',               stage:'Yuma',            day:'fri', time:'3:00 PM', est:true },
+  { id:'fy2', name:'Jessica Brankka',       stage:'Yuma',            day:'fri', time:'4:15 PM', est:true },
+  { id:'fy3', name:'Arodes',                stage:'Yuma',            day:'fri', time:'5:30 PM', est:true },
+  { id:'fy4', name:'Chloe Caillet × Rossi', stage:'Yuma',           day:'fri', time:'7:00 PM', est:true },
+  { id:'fy5', name:'Prospa',                stage:'Yuma',            day:'fri', time:'8:30 PM', est:true },
+  { id:'fy6', name:'Groove Armada',         stage:'Yuma',            day:'fri', time:'10:00 PM', est:true },
+  { id:'fy7', name:'Max Dean × Luke Dean',  stage:'Yuma',            day:'fri', time:'11:30 PM', est:true },
+  { id:'fy8', name:'Max Styler',            stage:'Yuma',            day:'fri', time:'1:00 AM', est:true },
+  { id:'fy9', name:'Gordo',                 stage:'Yuma',            day:'fri', time:'2:30 AM', est:true },
+  { id:'fy10',name:'Kettama',               stage:'Yuma',            day:'fri', time:'4:00 AM', est:true },
+  // Quasar (W2 specific)
+  { id:'fq1', name:'Armin Van Buuren × Adam Beyer', stage:'Quasar', day:'fri', time:'8:00 PM', est:true },
+
+  // ── SATURDAY APR 18 ───────────────────────────────────────
+  // Coachella Stage
+  { id:'sc1', name:'PinkPantheress',        stage:'Coachella',       day:'sat', time:'2:00 PM', est:true },
+  { id:'sc2', name:'Addison Rae',           stage:'Coachella',       day:'sat', time:'3:30 PM', est:true },
+  { id:'sc3', name:'GIVEON',                stage:'Coachella',       day:'sat', time:'5:00 PM', est:true },
+  { id:'sc4', name:'the Strokes',           stage:'Coachella',       day:'sat', time:'8:00 PM', est:true },
+  { id:'sc5', name:'Justin Bieber',         stage:'Coachella',       day:'sat', time:'11:00 PM', headliner:true },
+  // Outdoor Theater
+  { id:'so1', name:'Los Hermanos Flores',   stage:'Outdoor Theater', day:'sat', time:'2:00 PM', est:true },
+  { id:'so2', name:'SOMBR',                 stage:'Outdoor Theater', day:'sat', time:'3:30 PM', est:true },
+  { id:'so3', name:'Nine Inch Nails',       stage:'Outdoor Theater', day:'sat', time:'6:00 PM', est:true },
+  { id:'so4', name:'Labrinth',              stage:'Outdoor Theater', day:'sat', time:'8:30 PM', est:true },
+  // Gobi
+  { id:'sg1', name:'WHATMORE',              stage:'Gobi',            day:'sat', time:'1:30 PM', est:true },
+  { id:'sg2', name:'Blondshell',            stage:'Gobi',            day:'sat', time:'3:00 PM', est:true },
+  { id:'sg3', name:'Geese',                 stage:'Gobi',            day:'sat', time:'4:30 PM', est:true },
+  { id:'sg4', name:'Royel Otis',            stage:'Gobi',            day:'sat', time:'6:00 PM', est:true },
+  { id:'sg5', name:'BIA',                   stage:'Gobi',            day:'sat', time:'7:30 PM', est:true },
+  { id:'sg6', name:'Davido',                stage:'Gobi',            day:'sat', time:'9:00 PM', est:true },
+  // Mojave
+  { id:'sm1', name:'Noga Erez',             stage:'Mojave',          day:'sat', time:'2:00 PM', est:true },
+  { id:'sm2', name:'Luisa Sonza',           stage:'Mojave',          day:'sat', time:'3:30 PM', est:true },
+  { id:'sm3', name:'Alex G',                stage:'Mojave',          day:'sat', time:'5:00 PM', est:true },
+  { id:'sm4', name:'Fuji Kaze',             stage:'Mojave',          day:'sat', time:'6:30 PM', est:true },
+  { id:'sm5', name:'David Byrne',           stage:'Mojave',          day:'sat', time:'8:00 PM', est:true },
+  { id:'sm6', name:'Interpol',              stage:'Mojave',          day:'sat', time:'9:30 PM', est:true },
+  // Sahara
+  { id:'ss1', name:'ZULAN',                 stage:'Sahara',          day:'sat', time:'1:30 PM', est:true },
+  { id:'ss2', name:'Hamdi',                 stage:'Sahara',          day:'sat', time:'3:00 PM', est:true },
+  { id:'ss3', name:'Yousuke Yukimatsu',     stage:'Sahara',          day:'sat', time:'4:30 PM', est:true },
+  { id:'ss4', name:'Taemin',                stage:'Sahara',          day:'sat', time:'6:00 PM', est:true },
+  { id:'ss5', name:'Swae Lee',              stage:'Sahara',          day:'sat', time:'7:30 PM', est:true },
+  { id:'ss6', name:'Adriatique',            stage:'Sahara',          day:'sat', time:'9:00 PM', est:true },
+  { id:'ss7', name:'REZZ',                  stage:'Sahara',          day:'sat', time:'10:30 PM', est:true },
+  // Yuma
+  { id:'sy1', name:'Yamagucci',             stage:'Yuma',            day:'sat', time:'3:00 PM', est:true },
+  { id:'sy2', name:'GENESI',                stage:'Yuma',            day:'sat', time:'4:30 PM', est:true },
+  { id:'sy3', name:'Riordan',               stage:'Yuma',            day:'sat', time:'6:00 PM', est:true },
+  { id:'sy4', name:'SOSA',                  stage:'Yuma',            day:'sat', time:'7:30 PM', est:true },
+  { id:'sy5', name:'Mahmut Orhan',          stage:'Yuma',            day:'sat', time:'9:00 PM', est:true },
+  { id:'sy6', name:'Bedouin',               stage:'Yuma',            day:'sat', time:'10:30 PM', est:true },
+  { id:'sy7', name:'Ben Sterling',          stage:'Yuma',            day:'sat', time:'12:00 AM', est:true },
+  { id:'sy8', name:'Boys Noize',            stage:'Yuma',            day:'sat', time:'1:30 AM', est:true },
+  // Quasar (W2 specific)
+  { id:'sq1', name:"DJ Snake's Pardon My French", stage:'Quasar',   day:'sat', time:'9:00 PM', est:true },
+
+  // ── SUNDAY APR 19 ─────────────────────────────────────────
+  // Coachella Stage
+  { id:'uc1', name:'Little Simz',           stage:'Coachella',       day:'sun', time:'2:00 PM', est:true },
+  { id:'uc2', name:'Clipse',                stage:'Coachella',       day:'sun', time:'3:30 PM', est:true },
+  { id:'uc3', name:'Major Lazer',           stage:'Coachella',       day:'sun', time:'5:00 PM', est:true },
+  { id:'uc4', name:'Young Thug',            stage:'Coachella',       day:'sun', time:'7:30 PM', est:true },
+  { id:'uc5', name:'Karol G',               stage:'Coachella',       day:'sun', time:'10:00 PM', headliner:true },
+  // Outdoor Theater
+  { id:'uo1', name:'Wet Leg',               stage:'Outdoor Theater', day:'sun', time:'2:00 PM', est:true },
+  { id:'uo2', name:'Laufey',                stage:'Outdoor Theater', day:'sun', time:'3:30 PM', est:true },
+  { id:'uo3', name:'BIGBANG',               stage:'Outdoor Theater', day:'sun', time:'5:30 PM', est:true },
+  { id:'uo4', name:'FKA twigs',             stage:'Outdoor Theater', day:'sun', time:'7:30 PM', est:true },
+  // Gobi
+  { id:'ug1', name:'The Chats',             stage:'Gobi',            day:'sun', time:'1:30 PM', est:true },
+  { id:'ug2', name:'Morat',                 stage:'Gobi',            day:'sun', time:'3:00 PM', est:true },
+  { id:'ug3', name:'The Rapture',           stage:'Gobi',            day:'sun', time:'4:30 PM', est:true },
+  { id:'ug4', name:'COBRAH',                stage:'Gobi',            day:'sun', time:'6:00 PM', est:true },
+  { id:'ug5', name:'Tomora',                stage:'Gobi',            day:'sun', time:'7:30 PM', est:true },
+  // Mojave
+  { id:'um1', name:'Flowerovlove',          stage:'Mojave',          day:'sun', time:'1:30 PM', est:true },
+  { id:'um2', name:'Samia',                 stage:'Mojave',          day:'sun', time:'3:00 PM', est:true },
+  { id:'um3', name:'Suicidal Tendencies',   stage:'Mojave',          day:'sun', time:'4:30 PM', est:true },
+  { id:'um4', name:'Gigi Perez',            stage:'Mojave',          day:'sun', time:'6:00 PM', est:true },
+  { id:'um5', name:'Oklou',                 stage:'Mojave',          day:'sun', time:'7:30 PM', est:true },
+  { id:'um6', name:'Iggy Pop',              stage:'Mojave',          day:'sun', time:'9:00 PM', est:true },
+  // Sahara
+  { id:'us1', name:'BUNT.',                 stage:'Sahara',          day:'sun', time:'1:30 PM', est:true },
+  { id:'us2', name:'Mochakk',               stage:'Sahara',          day:'sun', time:'3:00 PM', est:true },
+  { id:'us3', name:'Worship',               stage:'Sahara',          day:'sun', time:'4:30 PM', est:true },
+  { id:'us4', name:'Duke Dumont',           stage:'Sahara',          day:'sun', time:'6:00 PM', est:true },
+  { id:'us5', name:'Subtronics',            stage:'Sahara',          day:'sun', time:'7:30 PM', est:true },
+  { id:'us6', name:'Kaskade',               stage:'Sahara',          day:'sun', time:'9:00 PM', est:true },
+  // Yuma
+  { id:'uy1', name:'LE YORA',               stage:'Yuma',            day:'sun', time:'3:00 PM', est:true },
+  { id:'uy2', name:'&friends',              stage:'Yuma',            day:'sun', time:'4:30 PM', est:true },
+  { id:'uy3', name:'Azzecca',               stage:'Yuma',            day:'sun', time:'6:00 PM', est:true },
+  { id:'uy4', name:'MESTIZA',               stage:'Yuma',            day:'sun', time:'7:30 PM', est:true },
+  { id:'uy5', name:'WhoMadeWho',            stage:'Yuma',            day:'sun', time:'9:00 PM', est:true },
+  { id:'uy6', name:'Röyksopp',              stage:'Yuma',            day:'sun', time:'10:30 PM', est:true },
+  { id:'uy7', name:'Carlita × Josh Baker',  stage:'Yuma',            day:'sun', time:'12:00 AM', est:true },
+  { id:'uy8', name:'Green Velvet × AYYBO',  stage:'Yuma',            day:'sun', time:'1:30 AM', est:true },
+  // Quasar (W2 specific)
+  { id:'uq1', name:"Sara Landry's Blood Oath", stage:'Quasar',       day:'sun', time:'9:00 PM', est:true },
+];
+
+const DEFAULT_FLIGHTS = [
+  { id:'f1', pid:'p1', type:'Inbound', from:'SEA', to:'PSP', flight:'AS 736',  date:'Thu Apr 16', dep:'8:14 AM',  arr:'11:05 AM' },
+  { id:'f2', pid:'p2', type:'Inbound', from:'OAK', to:'PSP', flight:'WN 356',  date:'Thu Apr 16', dep:'12:50 PM', arr:'2:26 PM'  },
+  { id:'f3', pid:'p1', type:'Return',  from:'PSP', to:'SEA', flight:'',        date:'Mon Apr 20', dep:'8:42 AM',  arr:''         },
+  { id:'f4', pid:'p2', type:'Return',  from:'LAX', to:'SFO', flight:'UA 2740', date:'Mon Apr 20', dep:'11:43 AM', arr:'3:15 PM'  },
+];
+
+const HOTEL = {
+  name: 'Renaissance Palm Springs',
+  address: '888 Tahquitz Canyon Way, Palm Springs, CA',
+  checkin:  'After 4:00 PM · Thu Apr 16',
+  checkout: 'By 11:00 AM · Mon Apr 20',
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+const DEFAULT_NOTES = [
+  { id:'dn1', cat:'logistics', text:'Book rideshare from PSP airport → hotel', done:false },
+  { id:'dn2', cat:'logistics', text:'Coordinate daily rides from hotel → venue', done:false },
+  { id:'dn3', cat:'logistics', text:'Buy $20 Coachella wristband activation', done:false },
+  { id:'dn4', cat:'packing',   text:'Sunscreen — Indio heat is no joke', done:false },
+  { id:'dn5', cat:'packing',   text:'Portable phone charger / power bank', done:false },
+  { id:'dn6', cat:'packing',   text:'Comfortable shoes (lots of walking)', done:false },
+  { id:'dn7', cat:'packing',   text:'Light jacket for cold desert nights', done:false },
+  { id:'dn8', cat:'packing',   text:'Reusable water bottle', done:false },
+  { id:'dn9', cat:'food',      text:'Plan pre-fest dinner each day', done:false },
+  { id:'dn10',cat:'food',      text:'Research vendors inside — lines get long', done:false },
+  { id:'dn11',cat:'outfits',   text:'Coordinate looks in group chat', done:false },
+  { id:'dn12',cat:'misc',      text:'Download Coachella app — official set times drop ~Apr 13', done:false },
+];
+
+const DEFAULT_MEETS = [
+  { id:'dm1', day:'fri', time:'4:00 PM', place:'Hotel lobby', note:'Head out together' },
+  { id:'dm2', day:'sat', time:'2:00 PM', place:'Ferris wheel', note:'Regroup after arriving separately' },
+  { id:'dm3', day:'sat', time:'9:45 PM', place:'Coachella Stage lawn', note:'Before the Strokes wrap up' },
+  { id:'dm4', day:'sun', time:'9:40 PM', place:'Coachella Stage GA',   note:'Secure spots for Karol G' },
+];
+
+let state = {
+  myId:    null,
+  names:   { p1:'Anna', p2:'Yuan', p3:'P3', p4:'P4' },
+  picks:   {},
+  notes:   JSON.parse(JSON.stringify(DEFAULT_NOTES)),
+  meets:   JSON.parse(JSON.stringify(DEFAULT_MEETS)),
+  flights: JSON.parse(JSON.stringify(DEFAULT_FLIGHTS)),
+  messages: [],   // { id, pid, text, ts }
+};
+
+let ui = {
+  tab:         'schedule',
+  day:         'fri',
+  stage:       'All',
+  picksPerson: null,
+};
+
+// ═══════════════════════════════════════════════════════════════
+// PERSISTENCE & SHARING
+// ═══════════════════════════════════════════════════════════════
+
+function save() {
+  try { localStorage.setItem('cw2_v2', JSON.stringify(state)); } catch(e) {}
+}
+
+function load() {
+  try {
+    // Check URL for shared state first
+    if (location.hash.startsWith('#s=')) {
+      const imported = JSON.parse(atob(decodeURIComponent(location.hash.slice(3))));
+      state = { ...state, ...imported };
+      history.replaceState(null, '', location.pathname);
+      save();
+      setTimeout(() => toast('📥 Loaded shared state!'), 400);
+      return;
+    }
+    const raw = localStorage.getItem('cw2_v2');
+    if (raw) {
+      const saved = JSON.parse(raw);
+      state = {
+        myId:     saved.myId  ?? null,
+        names:    { ...state.names, ...(saved.names || {}) },
+        picks:    saved.picks    || {},
+        notes:    saved.notes?.length    ? saved.notes    : JSON.parse(JSON.stringify(DEFAULT_NOTES)),
+        meets:    saved.meets?.length    ? saved.meets    : JSON.parse(JSON.stringify(DEFAULT_MEETS)),
+        flights:  saved.flights?.length  ? saved.flights  : JSON.parse(JSON.stringify(DEFAULT_FLIGHTS)),
+        messages: saved.messages || [],
+      };
+    }
+  } catch(e) {}
+}
+
+function shareLink() {
+  const encoded = encodeURIComponent(btoa(JSON.stringify({
+    names:    state.names,
+    picks:    state.picks,
+    notes:    state.notes,
+    meets:    state.meets,
+    flights:  state.flights,
+    messages: state.messages,
+  })));
+  const url = `${location.origin}${location.pathname}#s=${encoded}`;
+  navigator.clipboard.writeText(url)
+    .then(() => toast('🔗 Link copied — paste in your group chat!'))
+    .catch(() => { prompt('Copy this link and share it:', url); });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+function person(id) {
+  const p = PEOPLE.find(x => x.id === id);
+  if (!p) return null;
+  return { ...p, name: state.names[id] || p.name };
+}
+
+function stageClr(s) { return STAGE_CLR[s] || '#888'; }
+
+function t2n(t) { // time string → minutes since noon (for sorting)
+  if (!t) return 9999;
+  const clean = t.replace('~','').trim();
+  const m = clean.match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+  if (!m) return 9999;
+  let h = parseInt(m[1]), min = parseInt(m[2]);
+  const pm = m[3].toUpperCase() === 'PM';
+  if (pm && h !== 12) h += 12;
+  if (!pm && h === 12) h = 0;
+  if (h < 12) h += 24; // midnight–noon treated as next day
+  return h * 60 + min;
+}
+
+function picks(aid) { return state.picks[aid] || []; }
+function hasPick(aid, pid) { return picks(aid).includes(pid); }
+
+function togglePick(aid, pid) {
+  const cur = picks(aid);
+  state.picks[aid] = cur.includes(pid) ? cur.filter(x => x !== pid) : [...cur, pid];
+  save();
+  render();
+}
+
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg, dur = 2400) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), dur);
+}
+
+const DAY_LABELS = { fri:'Friday Apr 17', sat:'Saturday Apr 18', sun:'Sunday Apr 19' };
+const DAY_SHORT  = { fri:'Fri', sat:'Sat', sun:'Sun' };
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+
+function render() {
+  // Header
+  const me = state.myId ? person(state.myId) : null;
+  document.getElementById('hdrDot').style.background = me ? me.color : '#555';
+  document.getElementById('hdrName').textContent = me ? me.name : 'Who are you?';
+
+  // Nav active state
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tnav-' + ui.tab)?.classList.add('active');
+
+  // Content
+  const app = document.getElementById('app');
+  switch(ui.tab) {
+    case 'schedule': app.innerHTML = renderSchedule(); break;
+    case 'picks':    app.innerHTML = renderPicks();    break;
+    case 'group':    app.innerHTML = renderGroup();    break;
+    case 'travel':   app.innerHTML = renderTravel();   break;
+    case 'notes':    app.innerHTML = renderNotes();    break;
+  }
+}
+
+// ── Schedule ─────────────────────────────────────────────────
+
+function renderSchedule() {
+  const stages = ['All', ...Object.keys(STAGE_CLR).filter(s =>
+    LINEUP.some(a => a.day === ui.day && a.stage === s)
+  )];
+
+  const dayTabs = ['fri','sat','sun'].map(d => `
+    <button class="day-tab ${d===ui.day?'active':''}" onclick="setDay('${d}')">
+      ${d.toUpperCase()}<div class="date">${DAY_LABELS[d].split(' ').slice(1).join(' ')}</div>
+    </button>`).join('');
+
+  const chips = stages.map(s => {
+    const c = s === 'All' ? '#f0f0f0' : stageClr(s);
+    const act = s === ui.stage;
+    return `<button class="stage-chip ${act?'active':''}"
+      style="${act ? `background:${c};border-color:${c}` : `border-color:${c}33`}"
+      onclick="setStage('${esc(s)}')">${esc(s)}</button>`;
+  }).join('');
+
+  const artists = LINEUP
+    .filter(a => a.day === ui.day && (ui.stage === 'All' || a.stage === ui.stage))
+    .sort((a,b) => t2n(a.time) - t2n(b.time));
+
+  const cards = artists.map(a => {
+    const myPick = state.myId && hasPick(a.id, state.myId);
+    const sc = stageClr(a.stage);
+    const me = state.myId ? person(state.myId) : null;
+    const pickedStyle = myPick && me ? `border-color:${me.color};box-shadow:0 0 0 1px ${me.color}18` : '';
+    const dots = picks(a.id).map(pid => {
+      const p = person(pid);
+      return `<div class="pdot" style="background:${p.color}">${p.name.charAt(0)}</div>`;
+    }).join('');
+    return `
+      <div class="artist-card ${a.headliner?'headliner':''} ${myPick?'my-pick':''}"
+           style="${pickedStyle}" onclick="tapArtist('${a.id}')">
+        <div class="artist-top">
+          <div class="artist-name">${esc(a.name)}</div>
+          <div class="person-dots">${dots}</div>
+        </div>
+        <div class="artist-meta">
+          <div class="stage-badge" style="background:${sc}20;color:${sc}">${esc(a.stage)}</div>
+          <div class="time-text">${esc(a.time)}</div>
+          ${a.est ? '<div class="est-badge">est.</div>' : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="day-tabs">${dayTabs}</div>
+    <div class="stage-chips">${chips}</div>
+    <div class="info-banner" style="margin:0 12px 0;margin-top:8px">
+      ⏰ Times are estimated — official W2 set times drop around <strong>Apr 13</strong> on the Coachella app
+    </div>
+    <div class="artist-grid">${cards || '<div class="empty"><div class="empty-icon">🎵</div>No shows here</div>'}</div>`;
+}
+
+// ── Picks ─────────────────────────────────────────────────────
+
+function renderPicks() {
+  const personBtns = PEOPLE.map(p => {
+    const pn = person(p.id);
+    const act = ui.picksPerson === p.id;
+    return `<button class="person-btn ${act?'active':''}"
+      style="${act ? `background:${pn.color};border-color:${pn.color};color:#000` : `border-color:${pn.color}55;color:${pn.color}`}"
+      onclick="setPicksPerson('${p.id}')">
+      <div class="dot8" style="background:${pn.color}"></div>${esc(pn.name)}
+    </button>`;
+  }).join('');
+
+  let body = '';
+  const pid = ui.picksPerson;
+
+  if (!pid) {
+    body = `<div class="empty"><div class="empty-icon">👆</div>Tap a person above to see their schedule</div>`;
+  } else {
+    const pn = person(pid);
+    let any = false;
+    ['fri','sat','sun'].forEach(day => {
+      const myPicks = LINEUP
+        .filter(a => a.day === day && hasPick(a.id, pid))
+        .sort((a,b) => t2n(a.time) - t2n(b.time));
+      if (!myPicks.length) return;
+      any = true;
+      body += `<div class="day-label">${DAY_LABELS[day]}</div>`;
+      myPicks.forEach((a, i) => {
+        const conflict = myPicks.some((b,j) => j !== i && Math.abs(t2n(a.time)-t2n(b.time)) < 80);
+        const sc = stageClr(a.stage);
+        body += `<div class="pick-row" onclick="tapArtist('${a.id}')">
+          <div class="pick-time">${esc(a.time)}</div>
+          <div class="pick-info">
+            <div class="pick-name">${esc(a.name)}</div>
+            <div class="pick-stage" style="color:${sc}">${esc(a.stage)}</div>
+          </div>
+          ${conflict ? '<div class="conflict-dot" title="Overlapping pick"></div>' : ''}
+        </div>`;
+      });
+    });
+    if (!any) {
+      body = `<div class="empty"><div class="empty-icon">⭐</div>${esc(pn.name)} hasn't picked anyone yet<br><small style="opacity:.6">Go to Schedule and tap acts to add picks</small></div>`;
+    }
+  }
+
+  return `
+    <div class="person-bar">${personBtns}</div>
+    <div class="share-bar">
+      <button class="share-btn" onclick="shareLink()">🔗 Share with group</button>
+      <button class="share-btn gold" onclick="setTab('schedule')">+ Add picks</button>
+    </div>
+    <div class="picks-body">${body}</div>`;
+}
+
+// ── Group ─────────────────────────────────────────────────────
+
+function renderGroup() {
+  // Shared picks (2+ people)
+  const shared = LINEUP
+    .filter(a => (state.picks[a.id]||[]).length >= 2)
+    .sort((a,b) => {
+      const do_ = ['fri','sat','sun'];
+      return do_.indexOf(a.day) - do_.indexOf(b.day) || t2n(a.time) - t2n(b.time);
+    });
+
+  let overlapHtml = '';
+  if (shared.length) {
+    let lastDay = null;
+    shared.forEach(a => {
+      if (a.day !== lastDay) {
+        overlapHtml += `<div class="day-label">${DAY_LABELS[a.day]}</div>`;
+        lastDay = a.day;
+      }
+      const sc = stageClr(a.stage);
+      const dots = picks(a.id).map(pid => {
+        const p = person(pid);
+        return `<div class="pdot" style="background:${p.color};width:20px;height:20px;font-size:9px">${p.name.charAt(0)}</div>`;
+      }).join('');
+      overlapHtml += `<div class="overlap-row" onclick="setDayAndArtist('${a.day}','${a.id}')">
+        <div class="pick-time">${esc(a.time)}</div>
+        <div class="pick-info">
+          <div class="pick-name">${esc(a.name)}</div>
+          <div class="pick-stage" style="color:${sc}">${esc(a.stage)}</div>
+        </div>
+        <div class="person-dots">${dots}</div>
+      </div>`;
+    });
+  } else {
+    overlapHtml = `<div class="empty" style="padding:24px 0"><div class="empty-icon">🤝</div>No shared picks yet<br><small style="opacity:.6">Picks overlap here once 2+ people want the same act</small></div>`;
+  }
+
+  const meetsHtml = state.meets.map((m,i) => `
+    <div class="meet-card">
+      <div class="meet-left">
+        <div class="meet-day">${DAY_SHORT[m.day]||''}</div>
+        <div class="meet-time">${esc(m.time)}</div>
+      </div>
+      <div>
+        <div class="meet-place">${esc(m.place)}</div>
+        <div class="meet-note">${esc(m.note)}</div>
+      </div>
+    </div>`).join('');
+
+  // Group messages
+  const msgs = state.messages || [];
+  const msgsHtml = msgs.length
+    ? msgs.map(m => {
+        const p = person(m.pid);
+        const name = p ? p.name : 'Unknown';
+        const color = p ? p.color : '#888';
+        const dt = new Date(m.ts);
+        const timeStr = dt.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+        const dateStr = dt.toLocaleDateString([], { month:'short', day:'numeric' });
+        return `<div class="msg-item">
+          <div class="msg-avatar" style="background:${color}">${name.charAt(0)}</div>
+          <div class="msg-body">
+            <div class="msg-sender" style="color:${color}">${esc(name)}</div>
+            <div class="msg-text">${esc(m.text)}</div>
+            <div class="msg-time">${dateStr} ${timeStr}</div>
+          </div>
+          <button class="icon-btn" onclick="deleteMsg('${m.id}')" title="Delete">×</button>
+        </div>`;
+      }).join('')
+    : '<div style="padding:12px 0;font-size:13px;color:var(--sub)">No messages yet — leave notes for the group!</div>';
+
+  return `
+    <div class="section">
+      <div class="section-title">🎶 Shared Picks</div>
+      ${overlapHtml}
+    </div>
+    <div class="section">
+      <div class="section-title">📍 Meeting Points</div>
+      ${meetsHtml}
+      <div class="add-row">
+        <select class="add-select" id="meetDay">
+          <option value="fri">Fri</option>
+          <option value="sat">Sat</option>
+          <option value="sun">Sun</option>
+        </select>
+        <input class="add-input" id="meetTime" placeholder="Time (e.g. 8:00 PM)" style="max-width:110px">
+        <input class="add-input" id="meetPlace" placeholder="Location / note" onkeydown="if(event.key==='Enter')addMeet()">
+        <button class="add-btn" onclick="addMeet()">+</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">💬 Group Notes</div>
+      <div class="card" style="padding:4px 14px">${msgsHtml}</div>
+      <div class="add-row">
+        <input class="add-input" id="msgInput" placeholder="${state.myId ? 'Leave a note for the group...' : 'Select yourself first'}"
+          ${!state.myId ? 'disabled' : ''} onkeydown="if(event.key==='Enter')addMsg()">
+        <button class="add-btn" onclick="addMsg()">→</button>
+      </div>
+    </div>`;
+}
+
+// ── Travel ────────────────────────────────────────────────────
+
+function renderTravel() {
+  const flightCards = state.flights.map(f => {
+    const p = person(f.pid);
+    if (!p) return '';
+    return `<div class="flight-card">
+      <div class="flight-header">
+        <div class="flight-person">
+          <div class="dot8" style="background:${p.color}"></div>${esc(p.name)}
+        </div>
+        <div class="flight-tag">${esc(f.type)}</div>
+        <button class="icon-btn" onclick="deleteFlight('${f.id}')" title="Remove">🗑</button>
+      </div>
+      <div class="flight-route">
+        <div>
+          <div class="airport">${esc(f.from)}</div>
+          <div class="airport-time">${esc(f.dep)}</div>
+        </div>
+        <div class="flight-middle">
+          <div class="flight-num">${esc(f.flight)}</div>
+          <div class="flight-line"></div>
+          <div class="flight-date">${esc(f.date)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="airport">${esc(f.to)}</div>
+          <div class="airport-time">${esc(f.arr)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const personOpts = PEOPLE.map(p => {
+    const pn = person(p.id);
+    return `<option value="${p.id}">${esc(pn.name)}</option>`;
+  }).join('');
+
+  return `
+    <div class="section">
+      <div class="section-title">🏨 Hotel</div>
+      <div class="card">
+        <div class="card-title">${esc(HOTEL.name)}</div>
+        <div class="card-sub">
+          ${esc(HOTEL.address)}<br>
+          Check-in: ${esc(HOTEL.checkin)}<br>
+          Check-out: ${esc(HOTEL.checkout)}
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">✈️ Flights</div>
+      ${flightCards}
+      <div class="flight-form">
+        <div class="flight-form-title">Add a flight</div>
+        <div style="display:flex;gap:7px;margin-bottom:7px">
+          <select class="form-select" id="flPid">${personOpts}</select>
+          <select class="form-select" id="flType">
+            <option value="Inbound">Inbound</option>
+            <option value="Return">Return</option>
+          </select>
+        </div>
+        <div class="form-grid">
+          <input class="form-input" id="flFrom" placeholder="FROM (e.g. SEA)">
+          <input class="form-input" id="flTo"   placeholder="TO (e.g. PSP)">
+          <input class="form-input" id="flNum"  placeholder="Flight # (e.g. AS 736)" style="text-transform:none">
+          <input class="form-input" id="flDate" placeholder="Date (e.g. Thu Apr 16)" style="text-transform:none">
+        </div>
+        <div class="form-row">
+          <input class="form-input" id="flDep" placeholder="Departs (e.g. 8:14 AM)" style="text-transform:none">
+          <input class="form-input" id="flArr" placeholder="Arrives (e.g. 11:05 AM)" style="text-transform:none">
+          <button class="add-btn" onclick="addFlight()" style="white-space:nowrap">Add ✈️</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function deleteFlight(id) {
+  state.flights = state.flights.filter(f => f.id !== id);
+  save(); render();
+}
+
+function addFlight() {
+  const pid  = document.getElementById('flPid')?.value;
+  const type = document.getElementById('flType')?.value || 'Inbound';
+  const from = document.getElementById('flFrom')?.value?.trim().toUpperCase();
+  const to   = document.getElementById('flTo')?.value?.trim().toUpperCase();
+  const num  = document.getElementById('flNum')?.value?.trim();
+  const date = document.getElementById('flDate')?.value?.trim();
+  const dep  = document.getElementById('flDep')?.value?.trim();
+  const arr  = document.getElementById('flArr')?.value?.trim();
+  if (!from || !to) { toast('Enter at least FROM and TO airports'); return; }
+  state.flights.push({ id:'fl'+Date.now(), pid, type, from, to, flight:num, date, dep, arr });
+  save(); render();
+  toast('✈️ Flight added!');
+}
+
+// ── Notes ─────────────────────────────────────────────────────
+
+function renderNotes() {
+  const cats = [
+    { id:'logistics', label:'🚗 Logistics' },
+    { id:'packing',   label:'🎒 Packing'   },
+    { id:'food',      label:'🌮 Food'       },
+    { id:'outfits',   label:'👗 Outfits'    },
+    { id:'misc',      label:'📌 Misc'       },
+  ];
+
+  let html = '';
+  cats.forEach(cat => {
+    const items = state.notes.filter(n => n.cat === cat.id);
+    if (!items.length) return;
+    const rows = items.map(n => `
+      <div class="note-item">
+        <div class="note-check ${n.done?'done':''}" onclick="toggleNote('${n.id}')">
+          ${n.done ? '✓' : ''}
+        </div>
+        <div>
+          <div class="note-text ${n.done?'done':''}">${esc(n.text)}</div>
+        </div>
+      </div>`).join('');
+    html += `
+      <div class="section" style="padding-bottom:4px">
+        <div class="section-title">${cat.label}</div>
+        <div class="card" style="padding:4px 14px">${rows}</div>
+      </div>`;
+  });
+
+  html += `
+    <div class="section">
+      <div class="section-title">➕ Add Note</div>
+      <div class="add-row">
+        <select class="add-select" id="noteCat">
+          <option value="logistics">Logistics</option>
+          <option value="packing">Packing</option>
+          <option value="food">Food</option>
+          <option value="outfits">Outfits</option>
+          <option value="misc">Misc</option>
+        </select>
+        <input class="add-input" id="noteText" placeholder="Add a note..." onkeydown="if(event.key==='Enter')addNote()">
+        <button class="add-btn" onclick="addNote()">+</button>
+      </div>
+    </div>`;
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════════
+
+function setTab(t) { ui.tab = t; render(); scrollTo(0,0); }
+function setDay(d) { ui.day = d; ui.stage = 'All'; render(); scrollTo(0,0); }
+function setStage(s) { ui.stage = s; render(); }
+function setPicksPerson(id) { ui.picksPerson = id; render(); }
+
+function setDayAndArtist(day, aid) {
+  ui.tab = 'schedule';
+  ui.day = day;
+  ui.stage = 'All';
+  render();
+  scrollTo(0,0);
+}
+
+function tapArtist(id) {
+  if (!state.myId) { openModal(); return; }
+  togglePick(id, state.myId);
+  const picked = hasPick(id, state.myId);
+  const a = LINEUP.find(x => x.id === id);
+  toast(picked ? `⭐ ${a?.name || ''} added` : `✕ Removed from picks`);
+}
+
+// ── Person modal ──────────────────────────────────────────────
+
+function openModal() {
+  document.getElementById('modal').style.display = 'flex';
+  const el = document.getElementById('personList');
+  el.innerHTML = PEOPLE.map(p => {
+    const pn = person(p.id);
+    const isMine = state.myId === p.id;
+    return `<div class="person-opt ${isMine?'active':''}"
+      style="${isMine ? `--p-color:${p.color}` : ''}"
+      onclick="selectPerson('${p.id}')">
+      <div class="person-avatar" style="background:${p.color}">${pn.name.charAt(0).toUpperCase()}</div>
+      <div class="person-opt-name">
+        <input class="pname-input" value="${esc(pn.name)}" placeholder="Name"
+          onchange="renamePerson('${p.id}',this.value)"
+          onclick="event.stopPropagation()">
+        ${isMine ? '<div class="you-label">Currently you</div>' : ''}
+      </div>
+      ${isMine ? '<div class="check-icon">✓</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+function selectPerson(id) {
+  state.myId = id;
+  ui.picksPerson = id;
+  save();
+  closeModal();
+  render();
+  toast(`👋 Welcome, ${person(id).name}!`);
+}
+
+function renamePerson(id, val) {
+  state.names[id] = val.trim() || PEOPLE.find(p => p.id === id)?.name;
+  save();
+  render();
+}
+
+// ── Notes & Meets ─────────────────────────────────────────────
+
+function toggleNote(id) {
+  const n = state.notes.find(x => x.id === id);
+  if (n) { n.done = !n.done; save(); render(); }
+}
+
+function addNote() {
+  const text = document.getElementById('noteText')?.value?.trim();
+  const cat  = document.getElementById('noteCat')?.value || 'misc';
+  if (!text) return;
+  state.notes.push({ id:'n'+Date.now(), cat, text, done:false });
+  save(); render();
+}
+
+function addMeet() {
+  const day   = document.getElementById('meetDay')?.value || 'fri';
+  const time  = document.getElementById('meetTime')?.value?.trim() || '';
+  const place = document.getElementById('meetPlace')?.value?.trim();
+  if (!place) return;
+  state.meets.push({ id:'m'+Date.now(), day, time, place, note:'' });
+  save(); render();
+}
+
+function addMsg() {
+  if (!state.myId) { toast('Tap your name in the header first!'); return; }
+  const input = document.getElementById('msgInput');
+  const text = input?.value?.trim();
+  if (!text) return;
+  if (!state.messages) state.messages = [];
+  state.messages.push({ id:'msg'+Date.now(), pid:state.myId, text, ts:Date.now() });
+  save(); render();
+}
+
+function deleteMsg(id) {
+  state.messages = (state.messages || []).filter(m => m.id !== id);
+  save(); render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════════════
+
+load();
+render();
+
+if (!state.myId) {
+  setTimeout(openModal, 400);
+}
+</script>
+</body>
+</html>
