@@ -245,6 +245,30 @@
     }
     .toast.show { opacity: 1; }
 
+    /* ── Who-are-you modal ────────────────────────────────── */
+    .who-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .who-overlay.hidden { display: none; }
+    .who-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 340px;
+      text-align: center;
+    }
+    .who-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .who-sub   { font-size: 13px; color: var(--sub); margin-bottom: 24px; }
+    .who-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .who-btn {
+      padding: 16px 10px; border-radius: 14px;
+      border: 2px solid var(--border); background: none;
+      color: var(--text); font-family: inherit; font-size: 16px;
+      font-weight: 700; cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .who-btn:hover { border-color: var(--gold); color: var(--gold); }
+
     /* ── Empty ────────────────────────────────────────────── */
     .empty { padding: 40px 20px; text-align: center; color: var(--sub); font-size: 14px; }
 
@@ -260,6 +284,15 @@
   </style>
 </head>
 <body>
+
+<!-- Who-are-you modal -->
+<div class="who-overlay hidden" id="who-overlay">
+  <div class="who-box">
+    <div class="who-title">🌴 Hey!</div>
+    <div class="who-sub">Who are you?</div>
+    <div class="who-grid" id="who-grid"></div>
+  </div>
+</div>
 
 <!-- Top nav -->
 <nav class="top-nav">
@@ -342,8 +375,8 @@
 const PEOPLE = [
   { id:'p1', name:'Anna',  color:'#4ade80' },
   { id:'p2', name:'Yuan',  color:'#fbbf24' },
-  { id:'p3', name:'P3',    color:'#60a5fa' },
-  { id:'p4', name:'P4',    color:'#f472b6' },
+  { id:'p3', name:'10',   color:'#60a5fa' },
+  { id:'p4', name:'汪汪', color:'#f472b6' },
 ];
 
 // ═══════════════════════════════════════════════════════════════
@@ -467,39 +500,7 @@ const LINEUP = [
 // PACKING
 // ═══════════════════════════════════════════════════════════════
 
-const DEFAULT_PACKING = [
-  // Essentials
-  { id:'pk1',  cat:'essentials', text:'Wristband + ID', done:false },
-  { id:'pk2',  cat:'essentials', text:'Phone + portable charger', done:false },
-  { id:'pk3',  cat:'essentials', text:'Cash for merch & vendors', done:false },
-  { id:'pk4',  cat:'essentials', text:'Coachella app downloaded (official set times)', done:false },
-  // Sun & heat
-  { id:'pk5',  cat:'sun',        text:'Sunscreen SPF 50+', done:false },
-  { id:'pk6',  cat:'sun',        text:'Hat or cap', done:false },
-  { id:'pk7',  cat:'sun',        text:'Sunglasses', done:false },
-  { id:'pk8',  cat:'sun',        text:'Reusable water bottle', done:false },
-  // Comfort
-  { id:'pk9',  cat:'comfort',    text:'Comfortable shoes (lots of walking)', done:false },
-  { id:'pk10', cat:'comfort',    text:'Extra socks', done:false },
-  { id:'pk11', cat:'comfort',    text:'Light jacket for cold desert nights', done:false },
-  { id:'pk12', cat:'comfort',    text:'Mini hand fan or cooling spray', done:false },
-  // Logistics
-  { id:'pk13', cat:'logistics',  text:'Rideshare from PSP → hotel booked', done:false },
-  { id:'pk14', cat:'logistics',  text:'Daily rides hotel → venue sorted', done:false },
-  { id:'pk15', cat:'logistics',  text:'Pre-festival dinner plan each day', done:false },
-  // Style
-  { id:'pk16', cat:'style',      text:'Outfits coordinated (group chat!)', done:false },
-  { id:'pk17', cat:'style',      text:'Backup outfit in case it\'s dusty', done:false },
-];
-
-const PACK_CATS = [
-  { id:'essentials', label:'🔑 Essentials' },
-  { id:'sun',        label:'☀️ Sun & Heat' },
-  { id:'comfort',    label:'👟 Comfort'    },
-  { id:'logistics',  label:'🚗 Logistics'  },
-  { id:'style',      label:'✨ Style'       },
-  { id:'misc',       label:'📌 Misc'        },
-];
+const DEFAULT_PACKING = [];
 
 // ═══════════════════════════════════════════════════════════════
 // STATE
@@ -507,7 +508,7 @@ const PACK_CATS = [
 
 let state = {
   myId:    null,
-  names:   { p1:'Anna', p2:'Yuan', p3:'P3', p4:'P4' },
+  names:   { p1:'Anna', p2:'Yuan', p3:'10', p4:'汪汪' },
   picks:   {},
   packing: JSON.parse(JSON.stringify(DEFAULT_PACKING)),
 };
@@ -781,42 +782,35 @@ function renderPacking() {
   const el = document.getElementById('packing-content');
   if (!el) return;
 
-  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-    <div>
-      <div style="font-size:18px;font-weight:700">🎒 Packing List</div>
-      <div style="font-size:12px;color:var(--sub);margin-top:3px">Tap to check off items</div>
-    </div>
-    <button onclick="shareLink()" style="background:var(--gold);color:#000;border:none;border-radius:10px;padding:8px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">🔗 Share</button>
-  </div>`;
+  const doneCount = state.packing.filter(n => n.done).length;
+  const total = state.packing.length;
 
-  PACK_CATS.forEach(cat => {
-    const items = state.packing.filter(n => n.cat === cat.id);
-    if (!items.length) return;
-    const doneCount = items.filter(n => n.done).length;
-    html += `<div class="pack-section">
-      <div class="pack-label">${cat.label} <span style="font-size:11px;color:var(--sub);font-weight:400">${doneCount}/${items.length}</span></div>
-      <div class="pack-card">
-        ${items.map(n => `
-          <div class="pack-item" onclick="togglePack('${n.id}')">
-            <div class="pack-check ${n.done ? 'done' : ''}">${n.done ? '✓' : ''}</div>
-            <div class="pack-text ${n.done ? 'done' : ''}">${esc(n.text)}</div>
-          </div>`).join('')}
-      </div>
+  let itemsHtml = '';
+  if (state.packing.length) {
+    itemsHtml = `<div class="pack-card" style="margin-bottom:16px">
+      ${state.packing.map(n => `
+        <div class="pack-item" onclick="togglePack('${n.id}')">
+          <div class="pack-check ${n.done ? 'done' : ''}">${n.done ? '✓' : ''}</div>
+          <div class="pack-text ${n.done ? 'done' : ''}">${esc(n.text)}</div>
+        </div>`).join('')}
     </div>`;
-  });
+  } else {
+    itemsHtml = `<div class="empty" style="padding:32px 0">Nothing here yet — add items below</div>`;
+  }
 
-  html += `<div class="pack-section">
-    <div class="pack-label">➕ Add item</div>
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div>
+        <div style="font-size:18px;font-weight:700">🎒 Packing List</div>
+        <div style="font-size:12px;color:var(--sub);margin-top:3px">${total ? `${doneCount}/${total} done` : 'Tap to check off items'}</div>
+      </div>
+      <button onclick="shareLink()" style="background:var(--gold);color:#000;border:none;border-radius:10px;padding:8px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">🔗 Share</button>
+    </div>
+    ${itemsHtml}
     <div class="add-pack-row">
-      <select id="packCat" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 10px;color:var(--sub);font-family:inherit;font-size:12px;outline:none">
-        ${PACK_CATS.map(c => `<option value="${c.id}">${c.label.replace(/^\S+\s/,'')}</option>`).join('')}
-      </select>
       <input class="add-pack-input" id="packInput" placeholder="Add item..." onkeydown="if(event.key==='Enter')addPackItem()">
       <button class="add-pack-btn" onclick="addPackItem()">+</button>
-    </div>
-  </div>`;
-
-  el.innerHTML = html;
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -851,9 +845,8 @@ function togglePack(id) {
 
 function addPackItem() {
   const text = document.getElementById('packInput')?.value?.trim();
-  const cat  = document.getElementById('packCat')?.value  || 'misc';
   if (!text) return;
-  state.packing.push({ id:'pk'+Date.now(), cat, text, done:false });
+  state.packing.push({ id:'pk'+Date.now(), text, done:false });
   save(); renderPacking();
 }
 
@@ -861,8 +854,34 @@ function addPackItem() {
 // BOOT
 // ═══════════════════════════════════════════════════════════════
 
+function renderWhoModal() {
+  const grid = document.getElementById('who-grid');
+  if (!grid) return;
+  grid.innerHTML = PEOPLE.map(p => `
+    <button class="who-btn" onclick="chooseMe('${p.id}')" style="border-color:${p.color}20">
+      <span style="width:10px;height:10px;border-radius:50%;background:${p.color};flex-shrink:0;display:inline-block"></span>
+      ${esc(state.names[p.id] || p.name)}
+    </button>`).join('');
+}
+
+function chooseMe(id) {
+  state.myId = id;
+  save();
+  document.getElementById('who-overlay').classList.add('hidden');
+  renderPersonRow();
+  renderArtistSection();
+  const p = person(id);
+  toast(`👋 Hey ${p.name}!`);
+}
+
 load();
 render();
+
+// Show who-modal if identity not yet set
+if (!state.myId) {
+  renderWhoModal();
+  document.getElementById('who-overlay').classList.remove('hidden');
+}
 </script>
 </body>
 </html>
