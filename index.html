@@ -9,6 +9,44 @@
   <meta name="theme-color" content="#0d0d0d">
   <title>🌴 Coachella W2 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFajG0BABT_MJ4gSzCPsIneZVjOdHUYkw",
+      authDomain: "coachella-w2.firebaseapp.com",
+      databaseURL: "https://coachella-w2-default-rtdb.firebaseio.com",
+      projectId: "coachella-w2",
+      storageBucket: "coachella-w2.firebasestorage.app",
+      messagingSenderId: "1097134383621",
+      appId: "1:1097134383621:web:fd8b8f4de80e8e6dde326c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+    const stateRef = ref(db, 'state');
+
+    let remoteWritePending = false;
+
+    // Expose push-to-Firebase for the rest of the app
+    window._fbPush = function(stateObj) {
+      remoteWritePending = true;
+      set(stateRef, { picks: stateObj.picks, packing: stateObj.packing, names: stateObj.names })
+        .finally(() => { remoteWritePending = false; });
+    };
+
+    // Listen for remote changes and re-render
+    onValue(stateRef, (snapshot) => {
+      if (remoteWritePending) return;
+      const data = snapshot.val();
+      if (!data) return;
+      if (data.picks)   window._appState.picks   = data.picks;
+      if (data.packing) window._appState.packing  = data.packing;
+      if (data.names)   window._appState.names    = { ...window._appState.names, ...data.names };
+      if (window._rerender) window._rerender();
+    });
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -532,6 +570,10 @@ let state = {
   packing: JSON.parse(JSON.stringify(DEFAULT_PACKING)),
 };
 
+// Expose state + rerender to Firebase module
+window._appState = state;
+window._rerender = function() { render(); };
+
 let ui = {
   page: 'logistics',
   day:  'fri',
@@ -544,6 +586,7 @@ let ui = {
 
 function save() {
   try { localStorage.setItem('cw2_v3', JSON.stringify(state)); } catch(e) {}
+  if (window._fbPush) window._fbPush(state);
 }
 
 function load() {
@@ -568,8 +611,7 @@ function load() {
 }
 
 function shareLink() {
-  const payload = { myId: state.myId, names: state.names, picks: state.picks, packing: state.packing };
-  const url = `${location.origin}${location.pathname}#s=${encodeURIComponent(btoa(JSON.stringify(payload)))}`;
+  const url = `${location.origin}${location.pathname}`;
   navigator.clipboard.writeText(url)
     .then(() => toast('🔗 Link copied — paste in your group chat!'))
     .catch(() => prompt('Copy this link:', url));
