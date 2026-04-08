@@ -126,9 +126,23 @@
     .sub-tab.active { background: var(--text); border-color: var(--text); color: #000; }
 
     /* ── Hint text ────────────────────────────────────────── */
+    .hint-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
     .hint {
       font-size: 10px; font-weight: 700; letter-spacing: 1px;
-      text-transform: uppercase; color: var(--sub); margin-bottom: 12px;
+      text-transform: uppercase; color: var(--sub);
+    }
+    .save-btn {
+      padding: 6px 16px; border-radius: 20px;
+      border: 1.5px solid var(--gold); background: var(--gold);
+      color: #000; font-family: inherit; font-size: 12px;
+      font-weight: 700; cursor: pointer; transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .save-btn:disabled {
+      background: none; border-color: #444; color: #555; cursor: default;
     }
 
     /* ── Artist grid ──────────────────────────────────────── */
@@ -371,7 +385,10 @@
   </div>
 
   <!-- Hint -->
-  <div class="hint" id="hint-text">TAP A NAME TO MARK WHO WANTS TO SEE EACH ARTIST</div>
+  <div class="hint-row">
+    <div class="hint" id="hint-text">TAP A NAME TO MARK WHO WANTS TO SEE EACH ARTIST</div>
+    <button class="save-btn" id="save-btn" onclick="savePicks()" style="display:none">💾 Save Picks</button>
+  </div>
 
   <!-- Artist section -->
   <div id="artist-section"></div>
@@ -623,10 +640,28 @@ function person(id) {
 
 function picks(aid) { return state.picks[aid] || []; }
 function hasPick(aid, pid) { return picks(aid).includes(pid); }
+let _dirty = false;
+
 function togglePick(aid, pid) {
   const cur = picks(aid);
   state.picks[aid] = cur.includes(pid) ? cur.filter(x => x !== pid) : [...cur, pid];
-  save(); renderArtistSection();
+  try { localStorage.setItem('cw2_v3', JSON.stringify(state)); } catch(e) {}
+  _dirty = true;
+  updateSaveBtn();
+  renderArtistSection();
+}
+
+function updateSaveBtn() {
+  const btn = document.getElementById('save-btn');
+  if (!btn) return;
+  btn.style.display = (_dirty && ui.view === 'browse') ? '' : 'none';
+}
+
+function savePicks() {
+  _dirty = false;
+  updateSaveBtn();
+  fbPush();
+  toast('✅ Picks saved! Friends can now see your picks.');
 }
 
 function t2n(t) {
@@ -745,6 +780,10 @@ function renderArtistSection() {
     case 'overlap': el.innerHTML = renderOverlap(); break;
     case 'plan':    el.innerHTML = renderPlan();    break;
   }
+
+  // Show save button only on browse view when there are unsaved changes
+  const saveBtn = document.getElementById('save-btn');
+  if (saveBtn) saveBtn.style.display = (ui.view === 'browse' && _dirty) ? '' : 'none';
 }
 
 function renderBrowse() {
@@ -941,7 +980,7 @@ function chooseMe(id) {
 
 function checkPw() {
   const val = document.getElementById('pw-input').value;
-  if (val === 'vibecoding2026') {
+  if (val === '123') {
     sessionStorage.setItem('cw2_unlocked', '1');
     document.getElementById('pw-overlay').classList.add('hidden');
     document.getElementById('pw-input').value = '';
