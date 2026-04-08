@@ -387,7 +387,7 @@
   <!-- Hint -->
   <div class="hint-row">
     <div class="hint" id="hint-text">TAP A NAME TO MARK WHO WANTS TO SEE EACH ARTIST</div>
-    <button class="save-btn" id="save-btn" onclick="savePicks()" style="display:none">💾 Save Picks</button>
+    <button class="save-btn" id="save-btn" onclick="savePicks()">💾 Save Picks</button>
   </div>
 
   <!-- Artist section -->
@@ -654,7 +654,7 @@ function togglePick(aid, pid) {
 function updateSaveBtn() {
   const btn = document.getElementById('save-btn');
   if (!btn) return;
-  btn.style.display = (_dirty && ui.view === 'browse') ? '' : 'none';
+  btn.style.display = ui.view === 'browse' ? '' : 'none';
 }
 
 function savePicks() {
@@ -783,7 +783,7 @@ function renderArtistSection() {
 
   // Show save button only on browse view when there are unsaved changes
   const saveBtn = document.getElementById('save-btn');
-  if (saveBtn) saveBtn.style.display = (ui.view === 'browse' && _dirty) ? '' : 'none';
+  if (saveBtn) saveBtn.style.display = ui.view === 'browse' ? '' : 'none';
 }
 
 function renderBrowse() {
