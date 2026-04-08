@@ -674,8 +674,16 @@ function render() {
 // ── Flights ───────────────────────────────────────────────────
 
 function renderFlights() {
-  const inbound = FLIGHTS.filter(f => f.dir === 'inbound').sort((a,b) => a.dep.localeCompare(b.dep));
-  const ret     = FLIGHTS.filter(f => f.dir === 'return').sort((a,b) => a.dep.localeCompare(b.dep));
+  function depMin(t) {
+    const m = t.match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+    if (!m) return 9999;
+    let h = parseInt(m[1]), min = parseInt(m[2]);
+    if (m[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+    if (m[3].toUpperCase() === 'AM' && h === 12) h = 0;
+    return h * 60 + min;
+  }
+  const inbound = FLIGHTS.filter(f => f.dir === 'inbound').sort((a,b) => depMin(a.dep) - depMin(b.dep));
+  const ret     = FLIGHTS.filter(f => f.dir === 'return').sort((a,b) => depMin(a.dep) - depMin(b.dep));
 
   function flightCard(f) {
     const p = person(f.pid);
